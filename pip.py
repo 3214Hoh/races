@@ -10,7 +10,7 @@ finicsh = False
 font2 = font.SysFont('Arial',36)
 game_over_1 = font.SysFont('Arial',36)
 clock = time.Clock()
-c = 0
+counter = 0
 e = 1
 speed_car = 10
 YELLOW = (255, 255, 0)
@@ -23,7 +23,7 @@ display.set_caption('гонки')
 background = transform.scale(image.load('фон.png'), (window_x,window_y))
 
 class GameSprite(sprite.Sprite):
-    def __init__(self, player_image, player_x, player_y,size_x,size_y, player_speed ):
+    def __init__(self, player_image, player_x, player_y,size_x, size_y, player_speed):
         super().__init__()
 
         self.image = transform.scale(image.load(player_image),(size_x,size_y))
@@ -49,13 +49,11 @@ class Birdie(GameSprite):
 
 class Car_enemy(GameSprite):
     def management_car(self):
-        global c
         if self.rect.x > -70:
             self.rect.x -= self.speed
         else:
             self.rect.x = randint(670, 1300)
             self.rect.y = randint(0, 450)
-            c += 1
 
 class Area():
     def __init__(self, x=0, y=0, width=10, height=10, color=None):
@@ -115,15 +113,19 @@ while game:
         car_2.rect.x = randint(670, 1300)
         car_3.rect.x = randint(670, 1300)
         car_4.rect.x = randint(670, 1300)
+        counter = 0
         finicsh = False
-
+    killed_counter  =  font2.render("Счёт: "+ str(counter), 1, (0,25,0))
+    window.blit(killed_counter, (10,20))
     if finicsh != True:
         card.outline(BLUE, 5)
         card.set_text('Для новой игры нажмите на кнопку', 26)
         card.reset()
         #if card.collidepoint_1(x, y):
+        
         if keys[K_SPACE]:
             finicsh = True
+
     else:
         birdie.update()
         car.management_car()
@@ -136,8 +138,10 @@ while game:
         car_3.reset()
         car_4.reset()
 
+    if car.rect.x <= -69 or car_2.rect.x <= -69 or car_3.rect.x <= -69 or car_4.rect.x <= -69:
+        counter += 1
 
-        killed_counter  =  font2.render("Счёт: "+ str(c), 1, (0,25,0))
-        window.blit(killed_counter, (10,20))
+
+        
     display.update()
     clock.tick(FPS)
